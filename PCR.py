@@ -51,7 +51,12 @@ def verificacion_cov(matriz_mia,matriz_numpy):
 
 print('La matriz de covarianzas es:')
 print(matriz_cov)
+
+print('--------------------------------------------------------------------------------')
+
 verificacion_cov(matriz_cov,matriz_numpy)
+
+print('--------------------------------------------------------------------------------')
 
 valores_propios, vectores_propios = np.linalg.eig(matriz_cov)
 
@@ -60,6 +65,9 @@ for i in range(0,len(valores_propios)):
 	print (valores_propios[i])
 	print (vectores_propios[:,i])
 
+print('--------------------------------------------------------------------------------')
+
+print('Segun los resultados recien presentados, para cada autovalor y cada autovector, se puede ver que los componentes o parametros mas importantes son PC1 y PC2, es decir el primer autovector y el segundo autovector. Esto se puede confirmar haciendo uso del porcentaje de la varianza que estos atribuyen a los datos. Entonces, PC1 es responsable del ', valores_propios[0]*100/np.sum(valores_propios), '% de la varianza, y PC2 es responsable del ', valores_propios[1]*100/np.sum(valores_propios), '% de la varianza.')
 
 vector_prop_1 = vectores_propios[:,0]
 vector_prop_2 = vectores_propios[:,1]
@@ -90,7 +98,11 @@ plt.scatter(benigno_PC1,benigno_PC2, label = 'Diagnostico Benigno')
 plt.ylabel('PC2')
 plt.xlabel('PC1')
 plt.legend()
-plt.show()
+plt.savefig('GiraldoFelipe_PCA.pdf')
+
+print('--------------------------------------------------------------------------------')
+
+print('Para termiar con este punto, es importante analizar los resultados obtenidos de la proyeccion de los datos en los ejes de PC1 y PC2. Entonces, como se puede ver en la grafica que ha sido guardada en su computador GiraldoFelipe_PCA.pdf, los diagnosticos benignos estan agrupados a la derecha del grafico, y tienen una varianza menor en cuanto al eje PC1 que aquella para los diagnosticos malignos. Asi mismo, se puede ver que los diagnostico malignos tienen valores mayores en cuanto al eje PC1 y estan dispersos en cuanto a ambos ejes. Pero de manera general, se puede apreciar una clara diferencia en la agrupacion de estos datos, en donde los diagnosticos benignos estan hacia la izquierda y los malignos esta corridos un poco hacia la derecha. Asi pues, con esto resultados se puede decir que el analisis de PCA, para este caso probo ser exitososo debido a que se pudo diferenciar los casos en donde el diagnostico es benigno o maligno, lo cual podria ayudar a los paciente e incluso a los doctores a tener una mayor precuacion con diagnosticos que se encuentren en la zona de los malignos. ')
 
 
 #pca = PCA(n_components=2)
