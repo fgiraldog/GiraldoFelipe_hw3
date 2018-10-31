@@ -7,7 +7,8 @@ from scipy import fftpack
 from matplotlib.colors import LogNorm
 
 #Importacion de la imagen a un array de numpy
-imagen = np.array(plt.imread('arbol.png'))
+imagen = np.array(plt.imread('arbol.png')) #Aqui es posible que haya un error de importacion si la imagen se guarda como arbol(1).png
+#imagen = np.array(plt.imread('arbol(1).png')) #Si ese es el caso descomentar esta linea
 
 #Transformacion de fourier en 2D para la imagen
 imagen_transformada = fftpack.fft2(imagen)
