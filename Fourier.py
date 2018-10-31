@@ -43,6 +43,7 @@ def fourier_discreta(f,m,sampling):
 sampling_rate = 1/(datos_signal_x[1]-datos_signal_x[0])
 signal_x_trans, signal_y_trans = fourier_discreta(datos_signal_y,len(datos_signal_y),sampling_rate)
 
+
 #Grafica de la trasformada discreta de fourier para los datos de signal.dat
 plt.figure()
 plt.plot(signal_x_trans, np.real(signal_y_trans), label = 'Transformada de Fourier propia')
@@ -56,11 +57,11 @@ print('Para la transformada de Fourier, no se uso el paquete de fftfreq.')
 print('--------------------------------------------------------------------------------')
 
 #Comentario acerca de las frecuencias principales
-print('Las frecuencias principales de la señal, claramente son aquellas que tienen la mayor amplitud. Entonces, teniendo en cuenta la grafica que acaba de ser guardada en su computador GiraldoFelipe_TF.pdf, se puese apreciar que las mayores amplitudes se dan en las frecuencias bajas, es decir menores a 1000 Hz. Mas arriba de estas frecuencias se puede ver amplitudes pequeñas que claramente son las que generan el ruido en la señal. Entonces, es por esta razon que para poder filtrar la señal se debe implementar un filtro pasabajas.')
+print('Las frecuencias principales de la senal, claramente son aquellas que tienen la mayor amplitud. Entonces, teniendo en cuenta la grafica que acaba de ser guardada en su computador GiraldoFelipe_TF.pdf, se puede apreciar que las mayores amplitudes se dan en las frecuencias bajas, es decir menores a 1000 Hz. Mas arriba de estas frecuencias se puede ver amplitudes pequenas que claramente son las que generan el ruido en la senal. Entonces, es por esta razon que para poder filtrar la senal se debe implementar un filtro pasabajas.')
 
 print('--------------------------------------------------------------------------------')
 
-#Funcion para poder filtrar la señal
+#Funcion para poder filtrar la senal
 def filtro(frecuencias,transformadas,n):
 	for i in range(0,len(frecuencias)):
 		if abs(frecuencias[i])>n:
@@ -68,11 +69,10 @@ def filtro(frecuencias,transformadas,n):
 
 	return transformadas
 
-#Filtro de la señal signal.dat con la f_c = 1000 Hz. Aqui se hace el filtro y se recupera la señal de una vez
-signal_y_trans_nofilter = signal_y_trans.copy()
+#Filtro de la senal signal.dat con la f_c = 1000 Hz. Aqui se hace el filtro y se recupera la senal de una vez
 signal_y_filtrada1000 = ifft(filtro(signal_x_trans, signal_y_trans, 1000))
 
-#Grafica de la señal filtrada con f_c  = 1000 Hz
+#Grafica de la senal filtrada con f_c  = 1000 Hz
 plt.figure()
 plt.plot(datos_signal_x,datos_signal_y, label = 'Signal (Sin filtro)')
 plt.plot(datos_signal_x,np.real(signal_y_filtrada1000), label = 'Signal (Con filtro)')
@@ -83,7 +83,7 @@ plt.savefig('GiraldoFelipe_filtrada.pdf')
 
 
 #Comentario acerca de la transformada discreta de fourier en datos incompletos
-print('La transformada de Fourier no se puede hacer en los datos incompletos, debido a que la tasa de muestreo no es uniforme para cada dato. Es decir, el espaciamiento entre los datos no es el mismo para toda la muestra. Esto, hace que sea imposible crear la transformada de fourien en términos de la frecuencia, que es basicamente lo más importante para poder filtrar una señal con ruido. Esto se puede apreciar de una mejor manera con la funcion tanto propia como fftfreq, en donde, para poder encontrar las frecuencias asociadas a cada amplitud se necesita la tasa de muestreo de los datos, y esta no puede variar en el set de datos.')
+print('La transformada de Fourier no se puede hacer en los datos incompletos, debido a que la tasa de muestreo no es uniforme para cada dato. Es decir, el espaciamiento entre los datos no es el mismo para toda la muestra. Esto, hace que sea imposible crear la transformada de fourier en terminos de la frecuencia, que es basicamente lo mas importante para poder filtrar una senal con ruido. Esto se puede apreciar de una mejor manera con la funcion tanto propia como fftfreq, en donde, para poder encontrar las frecuencias asociadas a cada amplitud se necesita la tasa de muestreo de los datos, y esta no puede variar en el set de datos.')
 
 print('--------------------------------------------------------------------------------')
 
@@ -102,14 +102,15 @@ x = np.linspace(0.000390625,0.028515625,512)
 inter_q,inter_c = interpolacion(datos_incompletos,x)
 
 #Transformada discreta de fourier para los datos interpolados
-cuadratica_x_trans, cuadratica_y_trans = fourier_discreta(inter_q,len(inter_q),sampling_rate)
-cubica_x_trans, cubica_y_trans = fourier_discreta(inter_c,len(inter_c),sampling_rate)
+cuadratica_x_trans, cuadratica_y_trans = fourier_discreta(inter_q,len(inter_q),1/(x[1]-x[0]))
+cubica_x_trans, cubica_y_trans = fourier_discreta(inter_c,len(inter_c),1/(x[1]-x[0]))
+signal_x_trans1, signal_y_trans1 = fourier_discreta(datos_signal_y,len(datos_signal_y),sampling_rate)
 
 #Grafica con tres subplots para las tres transformadas, signal.dat, interpolacion cuadratica, interpolacion cubica
 plt.figure(figsize =[11,9])
 plt.subplots_adjust(hspace=0.7)
 plt.subplot(311)
-plt.plot(signal_x_trans, np.real(signal_y_trans_nofilter), label = 'Transformada de Fourier (Signal)')
+plt.plot(signal_x_trans1, np.real(signal_y_trans1), label = 'Transformada de Fourier (Signal)')
 plt.xlabel('$Frecuencia (Hz)$')
 plt.ylabel('$Amplitud$')
 plt.legend()
@@ -126,18 +127,18 @@ plt.legend()
 plt.savefig('GiraldoFelipe_TF_interpola.pdf')
 
 #Comentario acerca de las diferencias en las tres transformadas
-print('En la grafica que acaba de ser guardada en su computador GiraldoFelipe_TF_interpola.pdf, se pueden apreciar algunas diferencias entre las transformadas de fourier tanto para las funciones interpoladas como para signal.dat. Entre las funciones interpoladas, realmente hay una diferencia casi nula, ya que ambos espectros de frecuencia son muy similares y cuentan con los mismos picos en las mismas frecuencias. La diferencia real viene al uso de signal.dat y las funciones interpoladas, al rededor de los 500-550 Hz, en la transformacion de signal.dat aparece un pico que no esta presente en ninguna de las funciones interpoladas. Asi mismo, la transformada de signal.dat tiene mucho mas ruido en las frecuencias altas que las funciones interpoladas. Entonces, estas son algunas de las diferencias entre estas transformaciones, y esto puede ser verificado haciendo uso de la grafica GiradoFelipe_2Filtros.pdf. En esta, se puede ver que la funcion filtrada para las interpoladas es muy similar, y para signal.dat, esta se vuelve mas similar a las interpoladas cuando se le hace el filtro con la frecuencia de corte de 500 Hz, debido a que se elimina el pico que se menciono anteriormente.')
+print('En la grafica que acaba de ser guardada en su computador GiraldoFelipe_TF_interpola.pdf, se pueden apreciar algunas diferencias entre las transformadas de fourier tanto para las funciones interpoladas como para signal.dat. Entre las funciones interpoladas, existe una gran diferencia para los datos con interpolacion cuadratica ya que tiene mucho mas ruido en las frecuencias bajas. Asi mismo, la transformada de signal.dat tiene mucho mas ruido en las frecuencias altas que la funcion interpolada cubica, y cuenta con un pico alrededor de 500-550Hz, el cual la interpolacion cubica no cuenta. Entonces, estas son algunas de las diferencias entre estas transformaciones, y esto puede ser verificado haciendo uso de la grafica GiradoFelipe_2Filtros.pdf. En esta, se puede ver que la funcion filtrada para la interpolacion cuadratica es muy diferente a las otras dos, y para signal.dat, esta se vuelve mas similar a la funcion interpolada de manera cubica cuando se le hace el filtro con la frecuencia de corte de 500 Hz, debido a que se elimina el pico que se menciono anteriormente.')
 
-#Filtro de las tres señales con una f_c = 500 Hz. Aqui se filtra la señal y se vuelve a recuperar
+#Filtro de las tres senales con una f_c = 500 Hz. Aqui se filtra la senal y se vuelve a recuperar
 signal_y_filtrada500 = ifft(filtro(signal_x_trans, signal_y_trans, 500))
 cuadratica_y_filtrada500 = ifft(filtro(cuadratica_x_trans, cuadratica_y_trans, 500))
 cubica_y_filtrada500 = ifft(filtro(cubica_x_trans, cubica_y_trans, 500))
 
-#Filtro de las dos señales faltantes con una f_c = 1000 Hz. Aqui se filtra la señal y se vuelve a recuperar
+#Filtro de las dos senales faltantes con una f_c = 1000 Hz. Aqui se filtra la senal y se vuelve a recuperar
 cuadratica_y_filtrada1000 = ifft(filtro(cuadratica_x_trans, cuadratica_y_trans, 1000))
 cubica_y_filtrada1000 = ifft(filtro(cubica_x_trans, cubica_y_trans, 1000))
 
-#Grafica con dos subplots, uno para cada filtro en donde se ven las tres señales siendo analizadas
+#Grafica con dos subplots, uno para cada filtro en donde se ven las tres senales siendo analizadas
 plt.figure(figsize =[11,9])
 plt.subplots_adjust(hspace=0.7)
 plt.subplot(211)
